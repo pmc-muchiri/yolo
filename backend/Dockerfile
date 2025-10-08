@@ -11,8 +11,12 @@ ENV NODE_ENV=production
 # Working path for the hosting app
 WORKDIR /usr/src/app
 
+# Copy dependency files
+COPY package*.json ./
 # Install prod dependencies only to reduce image size omitting dev dependencies
-RUN npm install --prod --omit=dev
+# RUN npm install --prod --omit=dev
+RUN npm ci --omit=dev
+
 
 
 # Copy entire source code from the host to the working directory of container
