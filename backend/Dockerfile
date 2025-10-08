@@ -1,5 +1,5 @@
 # Stage 1 Bulding stages 
-FROM node:16-alpine AS build
+FROM node:alpine AS build
 LABEL author="Paul Muchiri"
 
 ARG buildversion
@@ -23,12 +23,12 @@ RUN npm ci --omit=dev
 COPY . .
 
 # stage 2 - Running stage
-FROM alpine:3.16.7 AS prod
+FROM alpine:3.1 AS prod
 # Working path for container
 WORKDIR /usr/src/app
 
 # not caching the package index to keep image size small
-RUN apk add --no-cache nodejs npm
+# RUN apk add --no-cache nodejs npm
 
 # copy files from build stage to working dir of container
 COPY --from=build /usr/src/app ./
