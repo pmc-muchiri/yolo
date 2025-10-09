@@ -21,7 +21,28 @@ services:
     env_file:
       - .env
 
+# BACKEND Container
+  pmc-yolo-backend:
+    image: pmcmuchiri/pmc-yolo-backend:v1.0.0
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        buildversion: v1.0.0
 
+    # interactive mode like docker run -it
+    stdin_open: true
+    tty: true
+    restart: always
+    container_name: pmc-yolo-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - back-net
+      - pmc-net
+    
+    env_file:
+      - .env
 
 volumes:
   mongo-database:
