@@ -2,13 +2,13 @@
 
 services:
 # DATABASE Container
-  pmc-database:
+  pmc-yolo-database:
     image: mongo:3.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    container_name: pmc-database
+    container_name: pmc-yolo-database
     ports:
       - "27017:27017"
     volumes:
@@ -18,4 +18,5 @@ services:
 
 volumes:
   mongo-database:
+    name: mongo-database
     driver: local
