@@ -7,7 +7,7 @@ services:
       context: ./database          
       dockerfile: Dockerfile
       args:
-      buildversion: 1.0.0      
+        buildversion: 1.0.0      
     image: pmc-yolo-database:v1.0.0
     restart: always
     environment:
