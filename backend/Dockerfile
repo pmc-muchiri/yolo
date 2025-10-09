@@ -1,5 +1,6 @@
 # Stage 1 Bulding stages 
-FROM node:alpine AS build
+FROM node:10-alpine AS build
+
 LABEL author="Paul Muchiri"
 
 ARG buildversion
@@ -14,8 +15,8 @@ WORKDIR /usr/src/app
 # Copy dependency files
 COPY package*.json ./
 # Install prod dependencies only to reduce image size omitting dev dependencies
-# RUN npm install --prod --omit=dev
-RUN npm ci --omit=dev
+RUN npm install --prod --omit=dev
+# RUN npm ci --omit=dev
 
 
 
@@ -23,12 +24,13 @@ RUN npm ci --omit=dev
 COPY . .
 
 # stage 2 - Running stage
-FROM alpine:3.1 AS prod
+FROM alpine:3.16.7 AS prod
 # Working path for container
 WORKDIR /usr/src/app
 
+
 # not caching the package index to keep image size small
-# RUN apk add --no-cache nodejs npm
+RUN apk update && apk add --update nodejs && apk add --no-cache nodejs npm
 
 # copy files from build stage to working dir of container
 COPY --from=build /usr/src/app ./
