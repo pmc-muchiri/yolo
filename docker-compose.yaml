@@ -23,7 +23,7 @@ services:
     networks:
       - back-net
 
-# BACKEND Container
+  # BACKEND Container
   pmc-yolo-backend:
     image: pmcmuchiri/pmc-yolo-backend:v1.0.0
     build: 
@@ -41,6 +41,26 @@ services:
       - "5000:5000"
     networks:
       - back-net
+
+  # FRONTEND Container
+  pmc-yolo-client:
+    image: pmcmuchiri/pmc-yolo-client:v1.0.0
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        buildversion: v1.0.0
+
+    # interactive mode like docker run -it
+    stdin_open: true
+    tty: true
+    restart: always
+    container_name: pmc-yolo-client
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+
 
 volumes:
   mongo-database:
