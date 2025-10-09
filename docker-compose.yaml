@@ -48,5 +48,4 @@ volumes:
 
 networks:
   back-net:
-    networkName: back-net
     driver: bridge
