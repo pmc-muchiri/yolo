@@ -5,15 +5,16 @@ services:
   pmc-yolo-database:
     build:
       context: ./database          
-      dockerfile: Dockerfile      
+      dockerfile: Dockerfile
+      args:
+      buildversion: 1.0.0      
     image: pmc-yolo-database:v1.0.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     container_name: pmc-yolo-database
-    args:
-      - buildversion=1.0.0
+    
     ports:
       - "27017:27017"
     volumes:
