@@ -41,6 +41,7 @@ services:
       - "5000:5000"
     networks:
       - back-net
+      - pmc-net
 
   # FRONTEND Container
   pmc-yolo-client:
@@ -58,8 +59,8 @@ services:
     container_name: pmc-yolo-client
     ports:
       - "8080:80"
-    env_file:
-      - .env
+    networks:
+      - pmc-net
 
 
 volumes:
@@ -68,4 +69,6 @@ volumes:
 
 networks:
   back-net:
+    driver: bridge
+  pmc-net:
     driver: bridge
