@@ -111,6 +111,16 @@ pmcmuchiri/pmc-yolo-database:v1.0.0
         docker push pmcmuchiri/pmc-yolo-client:v1.0.0
         docker push pmcmuchiri/pmc-yolo-database:v1.0.0
 ```
+#### Semantic Versioning (SemVer)
+
+The tagging convention follows `MAJOR.MINOR.PATCH`:
+
+- `MAJOR`— Incompatible API changes (e.g., v2.0.0)
+
+- `MINOR` — New features added in a backward-compatible manner (e.g., v1.1.0)
+
+- `PATCH` — Bug fixes or small changes (e.g., v1.0.1)
+
 
 ## Quick start (local, Docker Compose)
 
@@ -143,6 +153,29 @@ docker-compose logs -f
 ```bash
 docker-compose logs -f --tail 50
 ```
+6. verify containers are running
+```bash
+docker ps -a 
+```
+7. confirm custom networks created
+```bash
+docker network ls  
+``` 
+8. confirm volumes are persistent   
+```bash
+docker volume ls    
+```   
+9. confirm images are created
+
+```bash
+docker image ls    
+```  
+or 
+
+```bash
+docker images    
+```  
+
 ## Image build test
 
 Before you push to Dockerhub, build each images for test separately:
