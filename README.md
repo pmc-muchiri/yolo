@@ -145,6 +145,8 @@ Then visit Frontend -> [Yolo Website](http://localhost:8080) and upload your pro
 These are the images that I pyshed to dockerhub
 ![alt text](image-1.png)
 
+You can view, pull, or use these images directly from my Docker Hub repository: [Dockerhub-pmcmuchiri](https://hub.docker.com/repositories/pmcmuchiri)
+
 
 ## Product Upload on the website
 ![alt text](/docs/images/image-7.png)
