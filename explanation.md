@@ -6,48 +6,111 @@ This document explains the YOLO E-Commerce application (PMC_YOLO), a MERN-stack 
 
 The project is containerized with Docker and orchestrated using Docker Compose.
 
-## What this repo contains
+## Base Image Choice
+- **_Backend_** :
 
-- `client/` — This is React frontend (served at port 8080 by default in this project)
+    ~ used a `multi-stage build` using `node:10-alpine` building stanfe  and used `alpine:3.16.7`for runtime stage for a lightweight node environment keeping the final backend image size to **86.9MB**. The Alpine variants ensures a smaller footprint and faster building times.
 
-- `backend/` — Node/Express API (serves REST endpoints, usually port 5000)
+    ~ Include npm for dependency installation. 
 
-- `database/` — Dockerfile and configuration for MongoDB
+- **_Frontend_** :
 
-- `docker-compose.yaml` — Compose setup to build and bring up all services together at once
+    ~ I used a `multi-stage build` as well, using `node:14-slim` for the building stage and `nginx:alpine` for the runtime stage. The build image compiles the React code, and only the final static files are copied to the container. This reduces the final image size to just **54.8MB**, ensuring efficient serving of the frontend.
 
-- `README.md` — project README (overview, instructions and how to build microservices from scratch)
+- **_Database_** :
 
-> NB: You can verify filenames and exact port numbers in `docker-compose.yaml`, `backend/server.js`, and `client/package.json`.
+    ~ Used `mongo:3.0`, which is quite small and  provides a stable and production-ready MongoDB setup. This builds a total image size of the database container to **232MB**, which is was required.
+   
 
-## Architecture (high level)
+## Dockerfiles
 
-- Client -> Backend  | Backend -> MongoDB 
+Both backend and frontend Dockerfiles uses `multi-stage` builds to separate build and runtime stages for smaller and cleaner final images.
 
-This separation allows independent builds and scaling of each service.
+### Backend
 
-## Prerequisites
-As outlined in the README, the following are the requirements for running this project
+- Used `RUN npm install --prod --omit=dev` to install only production dependencies and ommit test and test and dev dependancies if any.
 
-- [Docker](https://www.docker.com/get-started)
+- Defined `WORKDIR /usr/src/app` for project structure.
 
-- [Docker compose](https://docs.docker.com/compose/install/)
+- Copied source code and launched the app with `CMD ["node", "server.js"]`.
 
-- [Git](https://git-scm.com/)
+### Frontend(Client)
 
-## Environment variables
+- Built the app using `npm run build` in the build stage.
 
-Copy `.env.sample` to `.env` (or create `.env`) in the project root and populate required values. Typical vars used for the MongoDB service and backend include:
+- Copied only the build dir to Nginx (`/usr/share/nginx/html`).
+
+- Used `CMD ["nginx", "-g", "daemon off;"]` to keep Nginx running in the foreground
+
+### database
+
+- Pulls mongoDB image that will be use to create a custome database image.
+
+## Docker Compose Networking
+
+All microservices (frontend, backend, and database) communicate over a **custom bridge network** defined in `docker-compose.yml`.
+
+ - backend-db-net: connects backend and database. This allows communication between services by service name,e.g., the backend connects to MongoDB via `mongodb://mongo:27017/yolo-db`.
+
+ - frontend-backend-net: connects clinet to backend. Frontend communicate with backend which communicates with database. 
+ 
+ - There is no direct communication of frontend and database
+
+### Port mappings/binding:
+
+- Frontend:`8080:80`
+
+- Backend: `5000:5000`
+
+- Database: `27017:27017`
+
+## Docker Volume
+
+### Database volume
+
+I named database volume `mongo_data` and mounted at `/data/db` in the database container to persist product data even after container shutdown.
+
+### Frontend volume
+
+Named as `client-logs` and mounted at `/usr/src/app/logs` to gather logs.
+
+### Backend volume
+
+Named as `backend-logs` and mounted at `/usr/src/app/logs` to gather logs.
+
+## Running and Debugging
+
+### Running
+
+- Running `docker-compose up --build` will successfully launch all containers.
+
+- Visiting _`http://localhost:8080`_ loads the e-commerce web app, and adding products using the “Add Product” form will confirms backend–database connectivity.
+
+- After restarting the containers, and still see products you added, it verifies persistent storage through the defined volume.
+
+### Debugging
+
+I used `docker logs container_name/container_id` to monitor output and `docker exec -it container_name/container_id sh` to inspect running containers interactively in  a shell.
+
+## Image Tagging
+All images were tagged using semantic versioning (semVer) for clarity:
 
 ```bash
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=example
-MONGO_INITDB_DATABASE=dbname
-BACKEND_PORT=5000
-CLIENT_PORT=8080
+pmcmuchiri/pmc-yolo-backend:v1.0.0 
+pmcmuchiri/pmc-yolo-client:v1.0.0
+pmcmuchiri/pmc-yolo-database:v1.0.0
 ```
+- Images were built efficiently, resulting in small sizes (all under 400MB total)
 
-Adjust these values and key to match `docker-compose.yaml` and the services' Dockerfiles (backend)
+- Tagging use `semVer` to simplify version management.
+
+- I pushed Images to DockerHub using:(login to docker hub using `docker login` and follow instruciton to log in.)
+
+```bash
+        docker push pmcmuchiri/pmc-yolo-backend:v1.0.0
+        docker push pmcmuchiri/pmc-yolo-client:v1.0.0
+        docker push pmcmuchiri/pmc-yolo-database:v1.0.0
+```
 
 ## Quick start (local, Docker Compose)
 
@@ -118,6 +181,23 @@ MongoCompatibilityError: Server at pmc-yolo-database:27017 reports maximum wire 
 
 - Persistent data: If data is unexpectedly missing, ensure volumes are configured correctly in `docker-compose.yaml`.
 
+## Summary
+
+The final containerized application runs successfully via Docker Compose command.
+
+All components are properly orchestrated through custom bridge networks, with persistent data handled via Docker volumes. 
+
+The use of lightweight base images, semantic and tagging ensures clean, efficient, and reproducible builds.
+
+**Final Image Sizes:**
+
+- Backend: 86.9MB  
+
+- Frontend: 54.8MB  
+
+- Database: 232MB  
+
+Total combined size is under the 400MB
 
 ## Author & License
 
