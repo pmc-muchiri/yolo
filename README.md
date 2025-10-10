@@ -127,6 +127,13 @@ Here are the final images less than 400mbs
 
 ![alt text](/docs/images/image-6.png)
 
+Then visit Frontend -> [Yolo Website](http://localhost:8080) and upload your product.
+
+
+## Product Upload on the website
+![alt text](/docs/images/image-7.png)
+
+## Application Architecture
 ```bash
         +------------------+
         |     CLIENT       |
@@ -150,10 +157,6 @@ Here are the final images less than 400mbs
         |  (Port: 27017)    |
         +-------------------+
 ```
-
-Then visit:
-
-Frontend -> [Yolo Website](http://localhost:8080)
 
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 
