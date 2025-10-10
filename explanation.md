@@ -143,7 +143,7 @@ docker-compose logs -f
 ```bash
 docker-compose logs -f --tail 50
 ```
-## Useful image build test
+## Image build test
 
 Before you push to Dockerhub, build each images for test separately:
 
