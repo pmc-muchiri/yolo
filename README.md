@@ -36,7 +36,7 @@ Create a .env file in the project root or rename `.env.sample`
 
 ## Project Structure
 
-```BASH
+```bash
 yolo/
     ├─ backend/             
     │   └── Dockerfile
@@ -51,14 +51,18 @@ yolo/
 ```          
 
 ## Step by Step Builing Containers
-### 1 Frontend Container
+### Frontend Container
 Build and test the frontend image  and test using this command
 
-``` docker image build -t alpine_image_image:v1.0.0 client/```
+```bash
+ docker image build -t alpine_image_image:v1.0.0 client/
+ ```
 
 You can verify using:
 
-``` docker images```
+```bash
+ docker images
+ ```
 
 ![Test for Dockerfile images ](./docs/images/image-3.png)
     
@@ -107,20 +111,28 @@ Step 2: Create the Backend Container
 
 Once all Dockerfiles are ready, start the services with:
 
-``` docker-compose up --build ```
+```bash
+ docker-compose up --build 
+ ```
 
 To run in detached mode:
 
-```docker-compose up -d ```
+```bash
+docker-compose up -d 
+```
 
 ### Stop and Clean Up
 To stop running containers:
 
-```docker compose down```
+```bash
+docker compose down
+```
 
 To remove containers, networks, and volumes:
 
-```docker compose down -v```
+```bash
+docker compose down -v
+```
 
 ### FInal Images 
 Here are the final images less than 400mbs
@@ -141,17 +153,17 @@ Then visit Frontend -> [Yolo Website](http://localhost:8080) and upload your pro
         |  (Port: 8080)    |
         +--------+---------+
                  |
-                 | HTTP (REST API)(localhost/)
+                 | HTTP (localhost/)
                  v
-        +------------------+
-        |    BACKEND       |
+        +-------------------+
+        |    BACKEND        |
         | Express + Node.js |
         |  (Port: 5000)     |
         +--------+----------+
                  |
                  | MongoDB URI
                  v
-        +------------------+
+        +-------------------+
         |   DATABASE        |
         |   MongoDB (3.0)   |
         |  (Port: 27017)    |
