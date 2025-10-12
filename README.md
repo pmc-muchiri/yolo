@@ -1,4 +1,4 @@
-# YOLO E-Commerce App(PMC_YOLO)
+# YOLO E-Commerce App(yolomy)
 
 ## About Application
 A full-stack e-commerce platform built using the MERN stack `(MongoDB, Express.js, React, and Node.js)`, featuring fashion and clothing products.
