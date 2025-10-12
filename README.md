@@ -85,7 +85,8 @@ after building confirm the image that has been built as well.
 Using multi-stage builds with alpine base reduces the final image size significantly.
 
 ### Database Dockerfile
-    A lightweight MongoDB database container built from a custom Dockerfile.
+
+A lightweight MongoDB database container built from a custom Dockerfile.
     
 
 
