@@ -1,4 +1,4 @@
-# YOLO E-Commerce App(PMC_YOLO)
+# YOLO E-Commerce App(yolomy)
 
 ## About Application
 A full-stack e-commerce platform built using the MERN stack `(MongoDB, Express.js, React, and Node.js)`, featuring fashion and clothing products.
@@ -85,7 +85,8 @@ after building confirm the image that has been built as well.
 Using multi-stage builds with alpine base reduces the final image size significantly.
 
 ### Database Dockerfile
-    A lightweight MongoDB database container built from a custom Dockerfile.
+
+A lightweight MongoDB database container built from a custom Dockerfile.
     
 
 
