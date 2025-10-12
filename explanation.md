@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document explains the YOLO E-Commerce application (PMC_YOLO), a MERN-stack sample app composed of three microservices: frontend, backend (Node/Express) and database (MongoDB). 
+This document explains the YOLO E-Commerce application (yolomy), a MERN-stack sample app composed of three microservices: frontend, backend (Node/Express) and database (MongoDB). 
 
 The project is containerized with Docker and orchestrated using Docker Compose.
 
