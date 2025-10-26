@@ -1,0 +1,10 @@
+# all.yml
+repo_url: "https://github.com/pmc-muchiri/yolo.git"
+app_base_dir: /opt/yolo
+backend_dir: "{{ app_base_dir }}/backend"
+frontend_dir: "{{ app_base_dir }}/frontend"
+db_dir: "{{ app_base_dir }}/db"
+backend_port: 8000
+frontend_port: 3000
+db_port: 5432
+
