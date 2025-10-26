@@ -14,6 +14,17 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "geerlingguy/ubuntu2004"
   config.vm.box_version = "1.0.4"
+  config.vm.network "private_network", ip: "192.168.56.11"
+  config.vm.synced_folder ".", "/vagrant_data"
+  end
+
+  #Vm Resources
+  config.vm.provider "virtualbox" do |vb|
+  vb.name = "ansible-vm"
+  vb.memory = "2048"
+  vb.cpus = 2
+  end
+
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
