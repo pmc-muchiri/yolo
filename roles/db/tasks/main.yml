@@ -26,8 +26,8 @@
     networks:
       - name: backend-db-net
     env:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "pmc123"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pmc123
     ports:
       - "27017:27017"
     volumes:
