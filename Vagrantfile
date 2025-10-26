@@ -14,16 +14,32 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "geerlingguy/ubuntu2004"
   config.vm.box_version = "1.0.4"
-  config.vm.network "private_network", ip: "192.168.56.11"
+  # config.vm.network "private_network", ip: "127.0.0.1"
   config.vm.synced_folder ".", "/vagrant_data"
 
   #Vm Resources
   config.vm.provider "virtualbox" do |vb|
-  vb.name = "ansible-vm"
-  vb.memory = "2048"
-  vb.cpus = 2
+    vb.name = "ansible-vm"
+    vb.memory = "2048"
+    vb.cpus = 2
   end
 
+  # Forward useful ports
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, auto_correct: true
+  config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
+  config.vm.network "forwarded_port", guest: 27017, host: 27017, auto_correct: true
+
+  # Force SSH port for Ansible
+  # config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
+  # Provision with Ansible
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.inventory_path = "inventory.yml"
+    ansible.become = true
+    ansible.limit = "all"
+    ansible.verbose = "v"
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
