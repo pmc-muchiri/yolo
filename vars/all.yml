@@ -6,4 +6,4 @@ db_dir: /opt/yolo/db
 backend_port: 5000
 db_port: 27017
 frontend_dir: /opt/yolo/frontend
-frontend_port: 3000
+frontend_port: 8080
