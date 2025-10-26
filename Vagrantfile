@@ -16,7 +16,6 @@ Vagrant.configure("2") do |config|
   config.vm.box_version = "1.0.4"
   config.vm.network "private_network", ip: "192.168.56.11"
   config.vm.synced_folder ".", "/vagrant_data"
-  end
 
   #Vm Resources
   config.vm.provider "virtualbox" do |vb|
