@@ -1,0 +1,15 @@
+- name: Configure YOLO app VM
+  hosts: default
+  become: true
+  vars_files:
+    - vars/all.yml
+
+  roles:
+    - role: common
+      tags: [common]
+    - role: db
+      tags: [db]
+    - role: backend
+      tags: [backend]
+    - role: frontend
+      tags: [frontend]
