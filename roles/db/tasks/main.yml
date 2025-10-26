@@ -1,0 +1,35 @@
+---
+- name: Ensure database directory exists
+  file:
+    path: "{{ db_dir }}"
+    state: directory
+    owner: vagrant
+    group: vagrant
+
+- name: Pull MongoDB image from Docker Hub
+  docker_image:
+    name: pmcmuchiri/pmc-yolo-database:v1.0.1
+    source: pull
+  become: yes
+
+- name: Ensure MongoDB data volume exists
+  docker_volume:
+    name: mongo_data
+    state: present
+  become: yes
+
+- name: Run MongoDB container
+  docker_container:
+    name: pmc-yolo-database
+    image: pmcmuchiri/pmc-yolo-database:v1.0.1
+    restart_policy: unless-stopped
+    networks:
+      - name: backend-db-net
+    env:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "pmc123"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  become: yes
