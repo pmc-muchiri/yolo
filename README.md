@@ -177,7 +177,238 @@ You can view, pull, or use these images directly from my Docker Hub repository: 
         +-------------------+
 ```
 
+# Automated Provisioning with Ansible and Vagrant
+
+To simplify deployment and ensure environment consistency, I have integrated Ansible and Vagrant for full automation of the Dockerized YOLO app.
+
+## How It Works
+
+- Vagrant provisions an Ubuntu geerlingguy/ubuntu2004 virtual machine (VM) using VirtualBox.
+
+- Once the VM is created, Ansible automatically:
+    - Installs Docker and required dependencies.
+    - Pulls the following pre-built Docker images from Docker Hub
+        - frontend. 
+        - backend.
+        - database.
+    - Creates and connects the necessary Docker networks.
+    - Runs the containers with proper port mappings.
+
+## Containers Deployed
+
+|       Service       | Image                                         | Port Mapping          |
+|---------------------| ----------------------------------------------| ----------------------|
+|       Frontend      | `pmcmuchiri/pmc-yolo-client:v1.0.1`           | `8080:80`             |
+|       Backend       | `pmcmuchiri/pmc-yolo-backend:v1.0.1`          | `5000:5000`           |
+|       Database      | `pmcmuchiri/pmc-yolo-database:v1.0.1`         | `27017:27017`         |
+
+## Folder Structure
+```bash
+ansible/
+├── inventory.yml             
+├── playbook.yml              
+├── vars/
+│   └── all.yml               
+└── roles
+        ├── backend
+        │   └── tasks
+        │       └── main.yml
+        ├── common
+        │   └── tasks
+        │       └── main.yml
+        ├── db
+        │   └── tasks
+        │       └── main.yml
+        └── frontend
+        └── tasks
+                └── main.yml
+            
+Vagrantfile                   
+```
+### inventory.yml
+- Here I defines the Ansible inventory.
+    - specifies the host(s) Ansible connects to.
+    - In this setup, it points to the Vagrant VM running locally over SSH.
+    - It tells Ansible where to execute tasks.
+
+### playbook.yml
+- The entry point for Ansible automation.
+- Defines which hosts to target and which roles to execute in sequence.
+
+### vars/all.yml
+- Central configuration file for environment variables and container settings.
+- Contains definitions like:
+    - Docker image names and tags
+
+    - Container ports
+
+    - Network names
+
+    - MongoDB credentials
+
+    - Application base paths
+- Itkeeps configuration declarative, centralised, and easily adjustable without touching playbooks.
+
+### Roles
+- Roles divide automation into modular components, each responsible for one layer of the stack.
+
+1. common/ : Handles system setup and prerequisites.
+
+ Tasks include:
+
+  - Updating packages and installing Docker, git, and curl
+
+  - Adding the vagrant user to the Docker group
+
+  - Cloning the application repository
+
+  - Creating Docker networks for service communication
+
+  - It prepares the base environment shared by all services.
+
+2. db/
+
+- Manages the MongoDB container.
+
+- Key tasks:
+
+    - Pulls MongoDB image from Docker Hub
+
+    - Ensures a persistent data volume exists
+
+    - Runs the MongoDB container with authentication and port mapping
+    
+    - It sets up the database layer.
+
+3. backend/
+
+- Deploys the Node.js/Express API service.
+
+- Key tasks:
+
+    - Creates the backend directory
+
+    - Pulls the backend image from Docker Hub
+
+    - Runs the backend container, linking it to both database and frontend networks
+
+    - Exposes port 5000
+
+4. frontend/
+
+- Manages the React frontend container (served via Nginx).
+
+- Key tasks:
+
+    - Pulls the prebuilt frontend image
+
+    - Runs the container, exposing it on port 80
+
+    - Connects it to the frontend-backend-net network
+
+### Vagrantfile
+
+- Defines the virtual machine configuration for the deployment environment.
+
+- Creates a consistent, reproducible environment for the entire stack — from OS setup to running containers.
+
+
+## Setting Up the Environment
+
+**Step 1: Clone the Repository**
+```bash
+
+git clone https://github.com/pmc-muchiri/yolo
+
+cd yolo
+
+```
+
+**Step 2: Start the Virtual Machine**
+
+```bash
+
+vagrant up
+
+```
+
+This command:
+
+- Spins up an Ubuntu **geerlingguy/ubuntu2004** VM.
+
+- Automatically runs Ansible to:
+
+- Install Docker & dependencies.
+
+- Create app directories and Docker networks.
+
+- Pull prebuilt Docker images from Docker Hub.
+
+- Run all containers with proper environment variables and ports.
+
+![alt text](image.png)
+
+![alt text](image-2.png)
+
+Once provisioning is complete ssh into the vm using this command
+```bash
+
+vagrant ssh
+
+```
+![alt text](image-3.png)
+
+Then Run this command
+
+```bash
+
+Docker ps
+
+```
+![alt text](image-4.png)
+
+## Test Connection
+Test connection inside VM using this command
+
+```bash
+
+curl localhost
+
+```
+This is the expected outcome if it’s working
+![alt text](./ansible_screenshots/image-5.png)
+
+## Access the app from your host machine:
+- Frontend → http://localhost:8080
+
+## Cleanup Commands
+
+To stop all containers:
+
+```bash
+
+docker compose down
+
+```
+To destroy the VM completely:
+
+```bash
+
+vagrant destroy -f
+
+```
+
+To reprovision a fresh setup:
+
+```bash
+
+vagrant up --provision
+
+```
+
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 
+DevOps Engineer | Cloud & Automation Enthusiast
 
-Repo Forked from [Yolo](https://github.com/Vinge1718/yolo)
+
+*Repository forked and enhanced from [Yolo](https://github.com/Vinge1718/yolo)*
