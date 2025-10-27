@@ -346,9 +346,9 @@ This command:
 
 - Run all containers with proper environment variables and ports.
 
-![alt text](image.png)
+![alt text](./ansible_screenshots/image.png)
 
-![alt text](image-2.png)
+![alt text](./ansible_screenshots/image-2.png)
 
 Once provisioning is complete ssh into the vm using this command
 ```bash
@@ -356,7 +356,7 @@ Once provisioning is complete ssh into the vm using this command
 vagrant ssh
 
 ```
-![alt text](image-3.png)
+![alt text](./ansible_screenshots/image-3.png)
 
 Then Run this command
 
@@ -365,7 +365,7 @@ Then Run this command
 Docker ps
 
 ```
-![alt text](image-4.png)
+![alt text](./ansible_screenshots/image-4.png)
 
 ## Test Connection
 Test connection inside VM using this command
