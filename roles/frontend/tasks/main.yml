@@ -1,19 +1,18 @@
 ---
-- name: Pull frontend image
+- name: Pull frontend image from dockerhub
   docker_image:
-    name: pmcmuchiri/pmc-yolo-client:v1.0.1
+    name: "{{ frontend_image }}"
     source: pull
   become: yes
 
 - name: Run frontend container
   docker_container:
-    name: pmc-yolo-frontend
-    image: pmcmuchiri/pmc-yolo-client:v1.0.1
+    name: "{{ frontend_container_name }}"
+    image: "{{ frontend_image }}"
     restart_policy: unless-stopped
     networks:
-      - name: frontend-backend-net
-    env:
-      NODE_ENV: production
+      - name: "{{ frontend_network }}"
+    env: "{{ frontend_env }}"
     ports:
-      - "80:80"
+      - "{{ frontend_port }}:80"
   become: yes
