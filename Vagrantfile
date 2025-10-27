@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
   #Vm Resources
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "ansible-vm"
+    vb.name = "ansible-vm_PMC"
     vb.memory = "2048"
     vb.cpus = 2
   end
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   # Forward useful ports
   config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
   config.vm.network "forwarded_port", guest: 5000, host: 5000, auto_correct: true
-  config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
+  # config.vm.network "forwarded_port", guest: 3000, host: 3000, auto_correct: true
   config.vm.network "forwarded_port", guest: 27017, host: 27017, auto_correct: true
 
   # Force SSH port for Ansible
