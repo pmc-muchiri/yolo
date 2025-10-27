@@ -8,22 +8,19 @@
 
 - name: Pull backend image from Docker Hub
   docker_image:
-    name: pmcmuchiri/pmc-yolo-backend:v1.0.1
+    name: "{{ backend_image }}"
     source: pull
   become: yes
 
 - name: Run backend container
   docker_container:
-    name: pmc-yolo-backend
-    image: pmcmuchiri/pmc-yolo-backend:v1.0.1
+    name: "{{ backend_container_name }}"
+    image: "{{ backend_image }}"
     restart_policy: unless-stopped
     networks:
-      - name: backend-db-net
-      - name: frontend-backend-net
-    env:
-      PORT: "5000"
-      MONGODB_URI: "mongodb://root:pmc123@pmc-yolo-database:27017"
-      NODE_ENV: "production"
+      - name: "{{ backend_networks[0] }}"
+      - name: "{{ backend_networks[1] }}"
+    env: "{{ backend_env }}"
     ports:
-      - "5000:5000"
+      - "{{ backend_port }}:{{ backend_port }}"
   become: yes
