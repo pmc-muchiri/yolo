@@ -1,9 +1,21 @@
 # YOLO E-Commerce App(yolomy)
+Updated Documentation Overview
 
-## About Application
-A full-stack e-commerce platform built using the MERN stack `(MongoDB, Express.js, React, and Node.js)`, featuring fashion and clothing products.
-This project demonstrates containerized microservices for the frontend, backend, and database using Docker and Docker Compose.
+This documentation is organized into three main stages, representing the progressive automation and deployment journey of the YOLO E-Commerce application:
 
+1. **Containerized Orchestration with Docker**
+- Focuses on building and managing the YOLO microservices (frontend, backend, and database) using Docker and Docker Compose.
+
+2. **Automated Provisioning with Ansible and Vagrant**
+- Covers full infrastructure automation and environment setup using Vagrant for virtualization and Ansible for configuration management and container deployment.
+
+- A full-stack e-commerce platform built using the MERN stack `(MongoDB, Express.js, React, and Node.js)`, featuring fashion and clothing products.
+- This project demonstrates containerized microservices for the frontend, backend, and database using Docker and Docker Compose.
+
+3. **Infrastructure Provisioning with Terraform and Ansible**
+- Combines Terraform for resource provisioning and Ansible for post-deployment configuration, achieving end-to-end automation.
+
+## 1. Containerized Orchestration with Docker
 ## Getting Started
 Follow these steps to set up and run the YOLO E-Commerce App locally using Docker.
 ### Prerequisites
@@ -177,7 +189,7 @@ You can view, pull, or use these images directly from my Docker Hub repository: 
         +-------------------+
 ```
 
-# Automated Provisioning with Ansible and Vagrant
+# 2. Automated Provisioning with Ansible and Vagrant
 
 To simplify deployment and ensure environment consistency, I have integrated Ansible and Vagrant for full automation of the Dockerized YOLO app.
 
@@ -405,6 +417,7 @@ To reprovision a fresh setup:
 vagrant up --provision
 
 ```
+## 3. Infrastructure Provisioning with Terraform and Ansible
 
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 
