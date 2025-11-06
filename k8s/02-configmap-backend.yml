@@ -7,4 +7,4 @@ data:
   PORT: "5000"
   # Service DNS for Mongo headless service defined below
   MONGO_URL: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017/yolo?authSource=admin"
-  CLIENT_ORIGIN: "http://CHANGEME_PUBLIC_IP_OR_DOMAIN"
+  CLIENT_ORIGIN: "http://34.160.20.49"
