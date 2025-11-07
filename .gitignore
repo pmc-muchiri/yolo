@@ -7,4 +7,4 @@ vault.yml
 .vscode
 .vscode/*
 .vscode/*.json
-.env
+.envk8s/01-secrets.yml
