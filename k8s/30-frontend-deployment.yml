@@ -14,13 +14,14 @@ spec:
         app: yolo-frontend
     spec:
       containers:
-        - name: frontend
-          image: pmcmuchiri/pmc-yolo-client:v1.0.1
+        - name: yolo-frontend
+          image: docker.io/pmcmuchiri/pmc-yolo-client:v1.0.1
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
             - name: VITE_API_URL
-              value: "/api"
+              value: "http://yolo-backend:5000"
           readinessProbe:
             httpGet:
               path: /
@@ -46,4 +47,4 @@ spec:
     - name: http
       port: 80
       targetPort: 8080
-  type: ClusterIP
+  type: NodePort
