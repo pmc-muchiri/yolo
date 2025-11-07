@@ -19,11 +19,31 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
-          envFrom:
-            - secretRef:
-                name: yolo-secrets
-            - configMapRef:
-                name: yolo-backend-config
+          env:
+            - name: MONGO_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: yolo-secrets
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: yolo-secrets
+                  key: MONGO_ROOT_PASSWORD
+            - name: MONGO_URL
+              value: "mongodb://mongodb:27017/yolo"  # Updated to use service name
+            - name: MONGO_URI
+              value: "mongodb://mongodb:27017/yolo"  # Updated to use service name
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: yolo-backend-config
+                  key: PORT
+            - name: CLIENT_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: yolo-backend-config
+                  key: CLIENT_ORIGIN
           resources:
             requests:
               cpu: "250m"
