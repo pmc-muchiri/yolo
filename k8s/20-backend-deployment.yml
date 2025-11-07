@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend
+  namespace: yolo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yolo-backend
+  template:
+    metadata:
+      labels:
+        app: yolo-backend
+    spec:
+      containers:
+        - name: backend
+          image: pmcmuchiri/pmc-yolo-backend:v1.0.1
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: yolo-secrets
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: yolo-secrets
+                  key: MONGO_ROOT_PASSWORD
+            - name: MONGO_URL
+              value: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017/yolo?authSource=admin"
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: yolo-backend-config
+                  key: PORT
+            - name: CLIENT_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: yolo-backend-config
+                  key: CLIENT_ORIGIN
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-backend
+  namespace: yolo
+spec:
+  selector:
+    app: yolo-backend
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
