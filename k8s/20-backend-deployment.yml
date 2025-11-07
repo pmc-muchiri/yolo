@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: yolo-backend
-          image: docker.io/pmcmuchiri/pmc-yolo-backend:v1.0.1
+          image: docker.io/pmcmuchiri/pmc-yolo-backend:v1.0.2
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
