@@ -435,9 +435,9 @@ Backend → `http://34.35.131.113:5000`
 ---
 
 ### Docker Images Used
-- `pmcmuchiri/yolo-frontend:v1.0.0`
-- `pmcmuchiri/yolo-backend:v1.0.0`
-- `pmcmuchiri/yolo-mongo:3.0`
+- `docker.io/pmcmuchiri/pmc-yolo-frontend:v1.0.2`
+- `docker.io/pmcmuchiri/pmc-yolo-backend:v1.0.2`
+- `docker.io/pmcmuchiri/pmc-yolo-database:v1.0.1`
 
 ---
 
