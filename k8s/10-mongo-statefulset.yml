@@ -5,7 +5,7 @@ metadata:
   namespace: yolo
 spec:
   serviceName: mongo
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: mongo
@@ -16,10 +16,15 @@ spec:
     spec:
       containers:
         - name: mongo
-          image: docker.io/pmcmuchiri/pmc-yolo-database:v1.0.0
+          image: mongo:6.0
           imagePullPolicy: Always
           ports:
             - containerPort: 27017
+          command:
+            - "mongod"
+            - "--replSet"
+            - "rs0"
+            - "--bind_ip_all"
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
@@ -31,6 +36,8 @@ spec:
                 secretKeyRef:
                   name: yolo-secrets
                   key: MONGO_ROOT_PASSWORD
+            - name: MONGO_INITDB_DATABASE
+              value: yolomy
           volumeMounts:
             - name: mongo-persistent-storage
               mountPath: /data/db
@@ -38,7 +45,26 @@ spec:
     - metadata:
         name: mongo-persistent-storage
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard-rwo
         resources:
           requests:
             storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: yolo
+  labels:
+    app: mongo
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  clusterIP: None
+  type: ClusterIP

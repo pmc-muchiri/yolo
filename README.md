@@ -417,7 +417,96 @@ To reprovision a fresh setup:
 vagrant up --provision
 
 ```
-## 3. Infrastructure Provisioning with Terraform and Ansible
+### 3. Kubernetes (k8s) — Deployment on GKE
+
+### 🧠 Overview
+This final stage involves deploying the YOLO e-commerce microservices to **Google Kubernetes Engine (GKE)**.  
+The stack includes:
+- **MongoDB ReplicaSet** (3 nodes)
+- **Backend (Node.js/Express)** exposed via LoadBalancer
+- **Frontend (React + Nginx)** exposed via LoadBalancer
+
+---
+
+### Live URL
+Frontend → [http://34.35.137.242/](http://34.35.137.242/)  
+Backend → `http://34.35.131.113:5000`
+
+---
+
+### Docker Images Used
+- `pmcmuchiri/yolo-frontend:v1.0.0`
+- `pmcmuchiri/yolo-backend:v1.0.0`
+- `pmcmuchiri/yolo-mongo:3.0`
+
+---
+
+### Deploying on GKE
+
+```bash
+# Deploy all Kubernetes manifests
+kubectl apply -f k8s/ -n yolo
+
+# Check pods
+kubectl get pods -n yolo
+```
+![alt text](/k8s_images/pods.png)
+
+### MongoDB ReplicaSet Initialization
+After the Mongo/database pods are ready, open a shell to one of them and run:
+
+```bash
+kubectl exec -it mongo-0 -n yolo -- mongosh -u root -p pmc123
+```
+and inside mongo shell execute the following:
+
+```yaml
+
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongo-0.mongo.yolo.svc.cluster.local:27017" },
+    { _id: 1, host: "mongo-1.mongo.yolo.svc.cluster.local:27017" },
+    { _id: 2, host: "mongo-2.mongo.yolo.svc.cluster.local:27017" }
+  ]
+})
+```
+
+and you should see the following when you check status
+
+```yaml
+
+{
+  "ok" : 1,
+  "operationTime" : ...
+}
+```
+
+### check backend connection
+
+Check logs:
+
+```bash
+kubectl logs deploy/yolo-backend -n yolo
+```
+
+and this is what you are expected to see
+
+```bash
+Database connected successfully
+Server running on port 5000
+```
+
+![alt text](/k8s_images/back-endlogs.png)
+
+## Accessing the Application
+Once all pods and LoadBalancers are active:
+
+Frontend--> http://34.35.137.242/
+
+![alt text](/k8s_images/frontendbrowser.png)
+
+Backend --> http://34.35.131.113:5000/api/products
 
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 

@@ -30,10 +30,8 @@ spec:
                 secretKeyRef:
                   name: yolo-secrets
                   key: MONGO_ROOT_PASSWORD
-            - name: MONGO_URL
-              value: "mongodb://mongodb:27017/yolo"  # Updated to use service name
             - name: MONGO_URI
-              value: "mongodb://mongodb:27017/yolo"  # Updated to use service name
+              value: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017/yolomy?authSource=admin"
             - name: PORT
               valueFrom:
                 configMapKeyRef:

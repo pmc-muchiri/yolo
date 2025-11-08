@@ -232,6 +232,24 @@ The use of lightweight base images, semantic and tagging ensures clean, efficien
 
 Total combined size is under the 400MB
 
+# Kubenetes
+
+## Explanation
+
+### 1. Choice of Kubernetes Objects
+- **MongoDB via StatefulSet** with Headless Service for stable network identity and persistent storage through `volumeClaimTemplates`. This design preserves data across restarts and supports stateful workloads.
+- **Backend and Frontend via Deployments** with multiple replicas to allow rolling updates and resilience.
+- **Services** are ClusterIP for internal discovery.
+- **Ingress** (GKE) provides a single external entry point and routes `/api` to the backend and `/` to the frontend.
+
+### 2. Method to Expose Pods
+- Used a **GKE HTTP Ingress** which provisions a Google Cloud external load balancer. This reduces cost and complexity by avoiding multiple public IPs and keeps a single URL.
+
+### 3. Persistent Storage
+- MongoDB uses a PersistentVolumeClaim in the StatefulSet for durable storage on `standard-rwo`.
+- Application data remains intact across pod restarts and rescheduling events.
+
+
 ## Author & License
 
 Author: [Paul Muchiri](https://github.com/pmc-muchiri)

@@ -4,7 +4,7 @@ metadata:
   name: mongo
   namespace: yolo
   labels:
-    app: mongo  # Optional but recommended
+    app: mongo 
 spec:
   selector:
     app: mongo
@@ -12,5 +12,5 @@ spec:
     - protocol: TCP
       port: 27017
       targetPort: 27017
-  clusterIP: None   # Headless service — perfect for StatefulSet
-  type: ClusterIP   # Default, but explicit is good
+  clusterIP: None   
+  type: ClusterIP   
