@@ -6,7 +6,7 @@
         dockerfile: Dockerfile
         args:
           buildversion: 1.0.0     
-      image: pmcmuchiri/pmc-yolo-database:v1.0.0 #tag the image to push to docker hub
+      image: pmcmuchiri/pmc-yolo-database:v1.0.1 #tag the image to push to docker hub
       restart: always
       environment:
         MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -31,7 +31,7 @@
 
     # BACKEND Container
     pmc-yolo-backend:
-      image: pmcmuchiri/pmc-yolo-backend:v1.0.0
+      image: pmcmuchiri/pmc-yolo-backend:v1.0.1
       build: 
         context: ./backend
         dockerfile: Dockerfile
@@ -59,7 +59,7 @@
 
     # FRONTEND Container
     pmc-yolo-client:
-      image: pmcmuchiri/pmc-yolo-client:v1.0.0
+      image: pmcmuchiri/pmc-yolo-client:v1.0.1
       build: 
         context: ./client
         dockerfile: Dockerfile
