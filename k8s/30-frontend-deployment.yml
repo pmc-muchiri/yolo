@@ -20,7 +20,7 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: VITE_API_URL
+            - name: CLIENT_API_URL
               value: "http://34.35.131.113:5000"
 
           readinessProbe:
