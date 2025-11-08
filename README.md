@@ -508,6 +508,14 @@ Frontend--> http://34.35.137.242/
 
 Backend --> http://34.35.131.113:5000/api/products
 
+## google cloud Screenshots
+
+**Project**
+![alt text](/k8s_images/project.png)
+
+**Cluster**
+![alt text](/k8s_images/cluster_overview.png)
+
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 
 DevOps Engineer | Cloud & Automation Enthusiast

@@ -22,7 +22,7 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
-# ✅ Build React app
+# Build app
 RUN npm run build
 
 # === Runtime stage ===
@@ -32,9 +32,14 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built static files from build stage
+WORKDIR /usr/src/app
+
+# reduce image size by copying only necessary files
+# COPY --from=build /usr/src/app/package*.json ./
+# COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE $port
 
 RUN echo "Build version: $BUILD"
 
