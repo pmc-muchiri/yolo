@@ -1,7 +1,9 @@
 # YOLO E-Commerce App(yolomy)
 Updated Documentation Overview
 
-This documentation is organized into three main stages, representing the progressive automation and deployment journey of the YOLO E-Commerce application:
+ [Frontend Access:http://34.35.137.242/](http://34.35.137.242)
+
+This documentation is organized into four main stages, representing the progressive automation and deployment journey of the YOLO E-Commerce application:
 
 1. **Containerized Orchestration with Docker**
 - Focuses on building and managing the YOLO microservices (frontend, backend, and database) using Docker and Docker Compose.
@@ -14,6 +16,9 @@ This documentation is organized into three main stages, representing the progres
 
 3. **Infrastructure Provisioning with Terraform and Ansible**
 - Combines Terraform for resource provisioning and Ansible for post-deployment configuration, achieving end-to-end automation.
+
+4. **Kubernetes Deployment**
+- Covers deploying your microservices in a Kubernetes cluster, including Services, StatefulSets, and Ingress.
 
 ## 1. Containerized Orchestration with Docker
 ## Getting Started
@@ -417,7 +422,7 @@ To reprovision a fresh setup:
 vagrant up --provision
 
 ```
-### 3. Kubernetes (k8s) — Deployment on GKE
+# 4. Kubernetes (k8s) — Deployment on GKE
 
 ### Overview
 This final stage involves deploying the YOLO e-commerce microservices to **Google Kubernetes Engine (GKE)**.  
@@ -440,6 +445,62 @@ Backend → `http://34.35.131.113:5000`
 - `docker.io/pmcmuchiri/pmc-yolo-database:v1.0.1`
 
 ---
+
+
+### Kubernetes Cluster Creation
+
+Before deploying microservices, you need to log in, list your projects, and create a cluster.
+
+1. Login to Google Cloud
+```bash
+gcloud auth login
+```
+This opens a browser window to authenticate your account.
+![alt text](/k8s_images/gcloudlogin.png)
+
+2. List available projects
+
+```bash
+gcloud projects list
+```
+Note the PROJECT_ID you want to use for your YOLO cluster.
+mine:
+
+![alt text](/k8s_images/project_list.png)
+
+3. Set your project
+
+```bash
+
+gcloud config set project pmc-yolo-k8s
+
+```
+
+![alt text](/k8s_images/project_attached.png)
+
+4. Create the Kubernetes cluster
+
+```yml
+gcloud container clusters create yolo-cluster \
+  --zone africa-south1-a \
+  --num-nodes 2 \
+  --machine-type e2-medium
+```
+
+5. Get cluster credentials
+
+```bash
+ gcloud container clusters get-credentials yolo-cluster --zone africa-south1-a --project pmc-yolo-k8s![alt text](image-6.png)
+```
+![alt text](/k8s_images/projectdetails.png)
+
+
+6. Verify the cluster is running
+
+```bash
+kubectl get nodes
+```
+![alt text](/k8s_images/getnode.png)
 
 ### Deploying on GKE
 
