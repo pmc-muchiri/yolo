@@ -508,6 +508,59 @@ kubectl get svc -n yolo
 ```
 This command lists all Kubernetes Services within the yolo namespace.
 
+## Ingress Testing & Verification
+
+Once the Ingress resource has been created and assigned an external IP, confirm that it’s reachable.
+
+**1. Watch for the External IP**
+
+```bash
+kubectl get ingress -n yolo --watch
+```
+
+![alt text](/k8s_images/ingress.png)
+
+When you see an address appear, note it down. for example: `34.54.82.149`
+
+**2. Verify Access via Custom Domain**
+
+Edit your local /etc/hosts file to map the Ingress IP to your app’s domain by eunning this:
+```bash
+sudo nano /etc/hosts
+
+```
+Map the Ingress IP:
+
+```yaml
+
+127.0.0.1 localhost
+127.0.1.1 muchiri
+34.54.82.149   yolo-app.pmcdevops.com
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+```
+
+Test the Connection
+Ping to verify network reachability:
+
+```bash
+
+ping yolo-app.pmcdevops.com
+
+```
+
+open in your browser:
+
+[http://yolo-app.pmcdevops.com](http://yolo-app.pmcdevops.com)
+
+You should see your YOLO frontend or landing page load successfully
+
+
 ## Accessing the Application
 Once all pods and LoadBalancers are active:
 
@@ -524,6 +577,35 @@ Backend --> http://34.35.131.113:5000/api/products
 
 **Cluster**
 ![alt text](/k8s_images/cluster_overview.png)
+
+## System Archi
+
+```markdown
+
+                 ┌───────────────┐
+                 │ Users/Clients │
+                 └───────┬───────┘
+                         │ HTTP
+                         ^
+                ┌────────────────────────┐
+                │        Ingress         │
+                │ yolo-app.pmcdevops.com │
+                └───────┬────────────────┘
+                        │
+           ┌────────────┴────────────┐
+           │                         │
+    ┌───────────────┐         ┌───────────────┐
+    │    Frontend   │         │ Backend       │
+    │    Service    │         │ Service       │
+    └───────────────┘         └───────────────┘
+            │                         │
+            │                         │
+            ^                         |
+       ┌─────────────┐                |
+       │ Database    │                |
+       │ (MongoDB)   │  <─────────────        
+       └─────────────┘          
+```
 
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 

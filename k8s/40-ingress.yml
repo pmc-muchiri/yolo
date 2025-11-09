@@ -8,7 +8,7 @@ metadata:
     kubernetes.io/ingress.allow-http: "true"
 spec:
   rules:
-    - host: yolo-app.example.com
+    - host: yolo-app.pmcdevops.com
       http:
         paths:
           - path: /api
