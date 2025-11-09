@@ -487,6 +487,8 @@ gcloud container clusters create yolo-cluster \
   --machine-type e2-medium
 ```
 
+![alt text](/k8s_images/cluster_overview.png)
+
 5. Get cluster credentials
 
 ```bash
