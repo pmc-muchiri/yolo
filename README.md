@@ -419,7 +419,7 @@ vagrant up --provision
 ```
 ### 3. Kubernetes (k8s) — Deployment on GKE
 
-### 🧠 Overview
+### Overview
 This final stage involves deploying the YOLO e-commerce microservices to **Google Kubernetes Engine (GKE)**.  
 The stack includes:
 - **MongoDB ReplicaSet** (3 nodes)
@@ -498,6 +498,15 @@ Server running on port 5000
 ```
 
 ![alt text](/k8s_images/back-endlogs.png)
+
+## Checking Services
+
+Once your Kubernetes resources are deployed, verify that all services are running and properly connected by executing:
+
+```bash
+kubectl get svc -n yolo
+```
+This command lists all Kubernetes Services within the yolo namespace.
 
 ## Accessing the Application
 Once all pods and LoadBalancers are active:
