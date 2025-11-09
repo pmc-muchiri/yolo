@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: yolo
+  labels:
+    name: yolo
+  annotations:
+    project: "YOLO App Kubernetes Deployment"
+    owner: "Paul Muchiri"
+    environment: "production"

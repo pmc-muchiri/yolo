@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"mongo","namespace":"yolo"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mongo"}},"serviceName":"mongo","template":{"metadata":{"labels":{"app":"mongo"}},"spec":{"containers":[{"env":[{"name":"MONGO_INITDB_ROOT_USERNAME","valueFrom":{"secretKeyRef":{"key":"MONGO_ROOT_USERNAME","name":"yolo-secrets"}}},{"name":"MONGO_INITDB_ROOT_PASSWORD","valueFrom":{"secretKeyRef":{"key":"MONGO_ROOT_PASSWORD","name":"yolo-secrets"}}}],"image":"docker.io/pmcmuchiri/pmc-yolo-database:v1.0.0","imagePullPolicy":"Always","name":"mongo","ports":[{"containerPort":27017}],"volumeMounts":[{"mountPath":"/data/db","name":"mongo-persistent-storage"}]}]}},"volumeClaimTemplates":[{"metadata":{"name":"mongo-persistent-storage"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}},"storageClassName":"standard-rwo"}}]}}
+  creationTimestamp: "2025-11-07T17:30:05Z"
+  generation: 5
+  name: mongo
+  namespace: yolo
+  resourceVersion: "1762538892877423001"
+  uid: efe10f43-18f6-4d22-9353-61d4744041b2
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: mongo
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2025-11-07T21:08:12+03:00"
+      creationTimestamp: null
+      labels:
+        app: mongo
+    spec:
+      containers:
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_ROOT_USERNAME
+              name: yolo-secrets
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_ROOT_PASSWORD
+              name: yolo-secrets
+        image: docker.io/pmcmuchiri/pmc-yolo-database:v1.0.0
+        imagePullPolicy: Always
+        name: mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-persistent-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      name: mongo-persistent-storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: standard-rwo
+      volumeMode: Filesystem
+    status:
+      phase: Pending
+status:
+  availableReplicas: 0
+  collisionCount: 0
+  currentRevision: mongo-5cc47c789f
+  observedGeneration: 5
+  replicas: 1
+  updateRevision: mongo-668b7cd4df

@@ -1,5 +1,5 @@
 # MongoDB base image
-FROM mongo:3.0
+FROM mongo:6.0
 LABEL author="Paul Muchiri"
 ARG buildversion
 ENV port=27017

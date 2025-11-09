@@ -4,34 +4,29 @@ FROM node:14-slim AS build
 LABEL author="Paul Muchiri"
 
 ARG buildversion
-ARG VITE_API_URL  
 
-# Environment variables
-ENV PORT=80
-ENV BUILD=$buildversion
+# Evironment variables
+ENV port=80
+ENV build=$buildversion
 ENV NODE_ENV=production
-ENV VITE_API_URL=$VITE_API_URL  
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-# ✅ Install ALL dependencies (react-scripts included)
-RUN npm install
+RUN npm install --prod --omit=dev 
+# RUN npm ci --omit=dev
 
-# Copy the rest of the app
 COPY . .
 
-# Build app
+# Build 
 RUN npm run build
 
 # === Runtime stage ===
 FROM nginx:alpine
 
-# Clean up default nginx files
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built static files from build stage
 WORKDIR /usr/src/app
 
 # reduce image size by copying only necessary files
@@ -41,7 +36,7 @@ COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE $port
 
-RUN echo "Build version: $BUILD"
+RUN echo "Build version: $build"
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,7 +1,9 @@
 # YOLO E-Commerce App(yolomy)
 Updated Documentation Overview
 
-This documentation is organized into three main stages, representing the progressive automation and deployment journey of the YOLO E-Commerce application:
+ [Frontend Access:http://34.35.137.242/](http://34.35.137.242)
+
+This documentation is organized into four main stages, representing the progressive automation and deployment journey of the YOLO E-Commerce application:
 
 1. **Containerized Orchestration with Docker**
 - Focuses on building and managing the YOLO microservices (frontend, backend, and database) using Docker and Docker Compose.
@@ -14,6 +16,9 @@ This documentation is organized into three main stages, representing the progres
 
 3. **Infrastructure Provisioning with Terraform and Ansible**
 - Combines Terraform for resource provisioning and Ansible for post-deployment configuration, achieving end-to-end automation.
+
+4. **Kubernetes Deployment**
+- Covers deploying your microservices in a Kubernetes cluster, including Services, StatefulSets, and Ingress.
 
 ## 1. Containerized Orchestration with Docker
 ## Getting Started
@@ -417,7 +422,253 @@ To reprovision a fresh setup:
 vagrant up --provision
 
 ```
-## 3. Infrastructure Provisioning with Terraform and Ansible
+# 4. Kubernetes (k8s) — Deployment on GKE
+
+### Overview
+This final stage involves deploying the YOLO e-commerce microservices to **Google Kubernetes Engine (GKE)**.  
+The stack includes:
+- **MongoDB ReplicaSet** (3 nodes)
+- **Backend (Node.js/Express)** exposed via LoadBalancer
+- **Frontend (React + Nginx)** exposed via LoadBalancer
+
+---
+
+### Live URL
+Frontend → [http://34.35.137.242/](http://34.35.137.242/)  
+Backend → `http://34.35.131.113:5000`
+
+---
+
+### Docker Images Used
+- `docker.io/pmcmuchiri/pmc-yolo-frontend:v1.0.2`
+- `docker.io/pmcmuchiri/pmc-yolo-backend:v1.0.2`
+- `docker.io/pmcmuchiri/pmc-yolo-database:v1.0.1`
+
+---
+
+
+### Kubernetes Cluster Creation
+
+Before deploying microservices, you need to log in, list your projects, and create a cluster.
+
+1. Login to Google Cloud
+```bash
+gcloud auth login
+```
+This opens a browser window to authenticate your account.
+![alt text](/k8s_images/gcloudlogin.png)
+
+2. List available projects
+
+```bash
+gcloud projects list
+```
+Note the PROJECT_ID you want to use for your YOLO cluster.
+mine:
+
+![alt text](/k8s_images/project_list.png)
+
+3. Set your project
+
+```bash
+
+gcloud config set project pmc-yolo-k8s
+
+```
+
+![alt text](/k8s_images/project_attached.png)
+
+4. Create the Kubernetes cluster
+
+```yml
+gcloud container clusters create yolo-cluster \
+  --zone africa-south1-a \
+  --num-nodes 2 \
+  --machine-type e2-medium
+```
+
+![alt text](/k8s_images/cluster_overview.png)
+
+5. Get cluster credentials
+
+```bash
+ gcloud container clusters get-credentials yolo-cluster --zone africa-south1-a --project pmc-yolo-k8s![alt text](image-6.png)
+```
+![alt text](/k8s_images/projectdetails.png)
+
+
+6. Verify the cluster is running
+
+```bash
+kubectl get nodes
+```
+![alt text](/k8s_images/getnode.png)
+
+### Deploying on GKE
+
+```bash
+# Deploy all Kubernetes manifests
+kubectl apply -f k8s/ -n yolo
+
+# Check pods
+kubectl get pods -n yolo
+```
+![alt text](/k8s_images/pods.png)
+
+### MongoDB ReplicaSet Initialization
+After the Mongo/database pods are ready, open a shell to one of them and run:
+
+```bash
+kubectl exec -it mongo-0 -n yolo -- mongosh -u root -p pmc123
+```
+and inside mongo shell execute the following:
+
+```yaml
+
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongo-0.mongo.yolo.svc.cluster.local:27017" },
+    { _id: 1, host: "mongo-1.mongo.yolo.svc.cluster.local:27017" },
+    { _id: 2, host: "mongo-2.mongo.yolo.svc.cluster.local:27017" }
+  ]
+})
+```
+
+and you should see the following when you check status
+
+```yaml
+
+{
+  "ok" : 1,
+  "operationTime" : ...
+}
+```
+
+### check backend connection
+
+Check logs:
+
+```bash
+kubectl logs deploy/yolo-backend -n yolo
+```
+
+and this is what you are expected to see
+
+```bash
+Database connected successfully
+Server running on port 5000
+```
+
+![alt text](/k8s_images/back-endlogs.png)
+
+## Checking Services
+
+Once your Kubernetes resources are deployed, verify that all services are running and properly connected by executing:
+
+```bash
+kubectl get svc -n yolo
+```
+This command lists all Kubernetes Services within the yolo namespace.
+
+## Ingress Testing & Verification
+
+Once the Ingress resource has been created and assigned an external IP, confirm that it’s reachable.
+
+**1. Watch for the External IP**
+
+```bash
+kubectl get ingress -n yolo --watch
+```
+
+![alt text](/k8s_images/ingress.png)
+
+When you see an address appear, note it down. for example: `34.54.82.149`
+
+**2. Verify Access via Custom Domain**
+
+Edit your local /etc/hosts file to map the Ingress IP to your app’s domain by eunning this:
+```bash
+sudo nano /etc/hosts
+
+```
+Map the Ingress IP:
+
+```yaml
+
+127.0.0.1 localhost
+127.0.1.1 muchiri
+34.54.82.149   yolo-app.pmcdevops.com
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+```
+
+Test the Connection
+Ping to verify network reachability:
+
+```bash
+
+ping yolo-app.pmcdevops.com
+
+```
+
+open in your browser:
+
+[http://yolo-app.pmcdevops.com](http://yolo-app.pmcdevops.com)
+
+You should see your YOLO frontend or landing page load successfully
+
+
+## Accessing the Application
+Once all pods and LoadBalancers are active:
+
+Frontend--> http://34.35.137.242/
+
+![alt text](/k8s_images/frontendbrowser.png)
+
+Backend --> http://34.35.131.113:5000/api/products
+
+## google cloud Screenshots
+
+**Project**
+![alt text](/k8s_images/project.png)
+
+**Cluster**
+![alt text](/k8s_images/cluster_overview.png)
+
+## System Archi
+
+```markdown
+
+                 ┌───────────────┐
+                 │ Users/Clients │
+                 └───────┬───────┘
+                         │ HTTP
+                         ^
+                ┌────────────────────────┐
+                │        Ingress         │
+                │ yolo-app.pmcdevops.com │
+                └───────┬────────────────┘
+                        │
+           ┌────────────┴────────────┐
+           │                         │
+    ┌───────────────┐         ┌───────────────┐
+    │    Frontend   │         │ Backend       │
+    │    Service    │         │ Service       │
+    └───────────────┘         └───────────────┘
+            │                         │
+            │                         │
+            ^                         |
+       ┌─────────────┐                |
+       │ Database    │                |
+       │ (MongoDB)   │  <─────────────        
+       └─────────────┘          
+```
 
 ## Author
 [Paul Muchiri](https://github.com/pmc-muchiri) 

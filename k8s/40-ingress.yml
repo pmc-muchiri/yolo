@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yolo-ingress
+  namespace: yolo
+  annotations:
+    kubernetes.io/ingress.class: gce         # GKE HTTP(S) Ingress
+    kubernetes.io/ingress.allow-http: "true"
+spec:
+  rules:
+    - host: yolo-app.pmcdevops.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: yolo-backend
+                port:
+                  number: 5000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: yolo-frontend
+                port:
+                  number: 80
