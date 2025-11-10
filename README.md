@@ -569,7 +569,14 @@ Once your Kubernetes resources are deployed, verify that all services are runnin
 ```bash
 kubectl get svc -n yolo
 ```
+
 This command lists all Kubernetes Services within the yolo namespace.
+
+![alt text](/k8s_images/services.png)
+
+**Services on the gke**
+
+![alt text](/k8s_images/ckeService.png)
 
 ## Ingress Testing & Verification
 
@@ -582,6 +589,10 @@ kubectl get ingress -n yolo --watch
 ```
 
 ![alt text](/k8s_images/ingress.png)
+
+**Ingress on the gke**
+
+![alt text](/k8s_images/gke_ingress.png)
 
 When you see an address appear, note it down. for example: `34.54.82.149`
 
