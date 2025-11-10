@@ -31,7 +31,8 @@ spec:
                   name: yolo-secrets
                   key: MONGO_ROOT_PASSWORD
             - name: MONGO_URI
-              value: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017/yolomy?authSource=admin"
+              #value: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017/yolomy?authSource=admin"
+              value: "mongodb://$(MONGO_ROOT_USERNAME):$(MONGO_ROOT_PASSWORD)@mongo-0.mongo.yolo.svc.cluster.local:27017,mongo-1.mongo.yolo.svc.cluster.local:27017,mongo-2.mongo.yolo.svc.cluster.local:27017/yolomy?replicaSet=rs0&authSource=admin"
             - name: PORT
               valueFrom:
                 configMapKeyRef:
