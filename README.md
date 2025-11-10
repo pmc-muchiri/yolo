@@ -642,6 +642,8 @@ Frontend--> http://34.35.137.242/
 
 ![alt text](/k8s_images/frontendbrowser.png)
 
+![alt text](image-3.png)
+
 Backend --> http://34.35.131.113:5000/api/products
 
 ## google cloud Screenshots
